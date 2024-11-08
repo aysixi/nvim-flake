@@ -11,10 +11,10 @@
       autoindent = true;
       swapfile = true;
       hidden = true; # default on 
-      expandtab = false;
+      expandtab = true;
       cmdheight = 1;
-      shiftwidth = 4; # insert 4 spaces for each indentation
-      tabstop = 4; # insert 4 spaces for a tab
+      shiftwidth = 2; # insert 2 spaces for each indentation
+      tabstop = 2; # insert 2 spaces for a tab
       cursorline = false; # Highlight the line where the cursor is located
       cursorcolumn = false;
       number = true;

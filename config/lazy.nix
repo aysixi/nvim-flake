@@ -1,7 +1,8 @@
-{ pkgs
-, helpers
-, inputs
-, ...
+{
+  pkgs,
+  helpers,
+  inputs,
+  ...
 }:
 let
   importPlugin = name: import ./lazy_plugins/${name}.nix { inherit pkgs helpers inputs; };
@@ -70,11 +71,9 @@ let
       "go-nvim"
     ];
   };
-  plugins = builtins.concatMap
-    (
-      cat: map importPlugin (if builtins.isList cat then cat else [ cat ])
-    )
-    (builtins.attrValues category);
+  plugins = builtins.concatMap (
+    cat: map importPlugin (if builtins.isList cat then cat else [ cat ])
+  ) (builtins.attrValues category);
 in
 {
   withNodeJs = true;

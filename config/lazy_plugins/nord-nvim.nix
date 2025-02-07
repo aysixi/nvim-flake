@@ -27,6 +27,7 @@
         _BlinkCmpMenuBorder = { bg = NONE },
         _BlinkCmpMenuSelection = { bg = colors.nord10_gui },
         BlinkCmpKindCopilot = { fg = "#6CC644" },
+        BlinkCmpKindMinuet = { fg = "#6CC644" },
         BlinkCmpLabelMatch = { fg = colors.nord5_gui, style = 'bold' },
         BlinkCmpSource = { fg = colors.nord15_gui },
         BlinkCmpLabel = { fg = colors.nord3_gui_bright, style = 'italic' },

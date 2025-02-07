@@ -18,6 +18,10 @@
       url = "github:yetone/avante.nvim";
       flake = false;
     };
+    minuet-ai-nvim = {
+      url = "github:milanglacier/minuet-ai.nvim";
+      flake = false;
+    };
     blink-cmp.url = "github:saghen/blink.cmp";
     vim-translator = {
       url = "github:voldikss/vim-translator";
@@ -84,6 +88,10 @@
             inherit system;
             overlays = [
               inputs.neovim-nightly-overlay.overlays.default
+              # (final: prev: {
+              #   neovim-unwrapped =
+              #     inputs.neovim-nightly-overlay.packages.${final.stdenv.hostPlatform.system}.default;
+              # })
               inputs.nixd.overlays.default
             ];
           };

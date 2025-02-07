@@ -4,13 +4,13 @@
   helpers,
   ...
 }:
-# let
-#   minuet-ai = pkgs.vimUtils.buildVimPlugin {
-#     name = "minuet-ai";
-#     src = inputs.minuet-ai-nvim;
-#     doCheck = false;
-#   };
-# in
+let
+  minuet-ai = pkgs.vimUtils.buildVimPlugin {
+    name = "minuet-ai";
+    src = inputs.minuet-ai-nvim;
+    doCheck = false;
+  };
+in
 {
   pkg = inputs.blink-cmp.packages.${pkgs.system}.default;
   lazy = true;
@@ -25,37 +25,37 @@
         lazy = true;
         opts = { };
       }
-      # {
-      #   pkg = minuet-ai;
-      #   dependencies = with pkgs.vimPlugins; [ plenary-nvim ];
-      #   config = ''
-      #     function()
-      #       -- you can use deepseek with both openai_fim_compatible or openai_compatible provider
-      #       require("minuet").setup({
-      #         provider = "openai_fim_compatible",
-      #         provider_options = {
-      #           openai_fim_compatible = {
-      #             api_key = 'OPENAI_API_KEY',
-      #             name = "deepseek",
-      #             optional = {
-      #               max_tokens = 4096,
-      #               top_p = 0.9,
-      #             },
-      #           },
-      #           openai_compatible = {
-      #             api_key = 'OPENAI_API_KEY',
-      #             end_point = "https://api.deepseek.com/v1/chat/completions",
-      #             name = "deepseek",
-      #             optional = {
-      #               max_tokens = 4096,
-      #               top_p = 0.9,
-      #             },
-      #           },
-      #         },
-      #       })
-      #     end
-      #   '';
-      # }
+      {
+        pkg = minuet-ai;
+        dependencies = with pkgs.vimPlugins; [ plenary-nvim ];
+        config = ''
+          function()
+            -- you can use deepseek with both openai_fim_compatible or openai_compatible provider
+            require("minuet").setup({
+              provider = "openai_fim_compatible",
+              provider_options = {
+                openai_fim_compatible = {
+                  api_key = 'OPENAI_API_KEY',
+                  name = "deepseek",
+                  optional = {
+                    max_tokens = 4096,
+                    top_p = 0.9,
+                  },
+                },
+                openai_compatible = {
+                  api_key = 'OPENAI_API_KEY',
+                  end_point = "https://api.deepseek.com/v1/chat/completions",
+                  name = "deepseek",
+                  optional = {
+                    max_tokens = 4096,
+                    top_p = 0.9,
+                  },
+                },
+              },
+            })
+          end
+        '';
+      }
     ]
     ++ [
       # nvim-cmp source

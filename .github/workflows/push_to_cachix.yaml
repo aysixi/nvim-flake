@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "0 0 * * 6"
 env:
-  CACHIX_CACHE_NAME: ruixi-rebirth
+  CACHIX_CACHE_NAME: gomibox
 jobs:
   push_to_cachix:
     runs-on: ubuntu-latest
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install nix
-        uses: cachix/install-nix-action@v30
+        uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixos-unstable
           extra_nix_config: |
@@ -21,7 +21,7 @@ jobs:
       - name: Flake check
         run: nix flake check --all-systems
       - name: Setup cachix
-        uses: cachix/cachix-action@v15
+        uses: cachix/cachix-action@v16
         with:
           name: ${{ env.CACHIX_CACHE_NAME }}
           signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"

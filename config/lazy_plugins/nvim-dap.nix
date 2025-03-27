@@ -17,7 +17,7 @@
       local dap = require("dap")
       dap.adapters.lldb = {
         type = "executable",
-        command = "${pkgs.lldb}/bin/lldb-vscode",
+        command = "${pkgs.lldb}/bin/lldb-dap",
         name = "lldb",
       }
 
@@ -34,6 +34,7 @@
           args = {},
         },
       }
+      dap.configurations.cpp = dap.configurations.rust
     end
   '';
 }

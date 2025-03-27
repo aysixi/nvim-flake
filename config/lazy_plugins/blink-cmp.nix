@@ -12,7 +12,7 @@ let
   };
 in
 {
-  pkg = inputs.blink-cmp.packages.${pkgs.system}.default;
+  pkg = inputs.blink-cmp.packages.${pkgs.system}.blink-cmp;
   lazy = true;
   event = "InsertEnter";
   dependencies =
@@ -99,6 +99,45 @@ in
   config = ''
     function()
       require("blink.cmp").setup({
+        cmdline = {
+          enabled = true,
+          keymap = nil,
+          completion={
+            list = {
+              selection = {
+                preselect = false,
+                auto_insert = true
+              },
+            },
+            menu = { auto_show = true },
+            ghost_text = { enabled = false },
+          },
+        },
+        term = {
+          enabled = true,
+          keymap = nil,
+          completion={
+            menu = { auto_show = true },
+            ghost_text = { enabled = false },
+            trigger = {
+              show_on_blocked_trigger_characters = {},
+              show_on_x_blocked_trigger_characters = nil, -- Inherits from top level `completion.trigger.show_on_blocked_trigger_characters` config when not set
+            },
+            -- Inherits from top level config options when not set
+            list = {
+              selection = {
+                -- When `true`, will automatically select the first item in the completion list
+                preselect = nil,
+                -- When `true`, inserts the completion item automatically when selecting it
+                auto_insert = nil,
+              },
+            },
+            -- Whether to automatically show the window when new completion items are available
+            menu = { auto_show = nil },
+            -- Displays a preview of the selected item on the current line
+            ghost_text = { enabled = nil },
+          },
+        },
         completion = {
           accept = {
             auto_brackets = {
@@ -135,22 +174,14 @@ in
               components = {
                 kind_icon = {
                   ellipsis = false,
-                  text = function(ctx)
-                    return ctx.kind_icon .. ctx.icon_gap
-                  end,
-                  highlight = function(ctx)
-                    return require("blink.cmp.completion.windows.render.tailwind").get_hl(ctx) or "BlinkCmpKind" .. ctx.kind
-                  end,
+                  text = function(ctx) return ctx.kind_icon .. ctx.icon_gap end,
+                  highlight = function(ctx) return ctx.kind_hl end,
                 },
                 kind = {
                   ellipsis = false,
                   width = { fill = true },
-                  text = function(ctx)
-                    return ctx.kind
-                  end,
-                  highlight = function(ctx)
-                    return require("blink.cmp.completion.windows.render.tailwind").get_hl(ctx) or "BlinkCmpKind" .. ctx.kind
-                  end,
+                  text = function(ctx) return ctx.kind end,
+                  highlight = function(ctx) return ctx.kind_hl end,
                 },
                 label = {
                   width = { fill = true, max = 60 },
@@ -197,9 +228,12 @@ in
           trigger = {
             prefetch_on_insert = false,
             show_on_keyword = true,
+            show_in_snippet = true,
             show_on_trigger_character = true,
             show_on_insert_on_trigger_character = true,
             show_on_accept_on_trigger_character = true,
+            show_on_blocked_trigger_characters = { ' ', '\n', '\t' },
+            show_on_x_blocked_trigger_characters = { "'", '"', '(' },
           },
           documentation = {
             auto_show = true,
@@ -367,6 +401,7 @@ in
           },
         },
         fuzzy = {
+          implementation = 'prefer_rust_with_warning',
           prebuilt_binaries = {
             download = false,
           },

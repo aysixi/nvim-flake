@@ -5,9 +5,7 @@
   ...
 }:
 {
-  pkg = pkgs.vimPlugins.avante-nvim.overrideAttrs (old: {
-    src = inputs.avante-nvim;
-  });
+  pkg = pkgs.vimPlugins.avante-nvim;
   event = "VeryLazy";
   lazy = false;
   keys = helpers.mkRaw ''

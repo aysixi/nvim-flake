@@ -19,18 +19,20 @@
         lineFoldingOnly = true,
       }
 
-      --Change diagnostic symbols in the sign column (gutter)
-      local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-      for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-      end
       vim.diagnostic.config({
         virtual_text = false,
         signs = true,
         underline = true,
         update_in_insert = true,
         severity_sort = false,
+        signs = {
+          text = {
+            [vim.diagnostic.severity.HINT]  = " ",
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.INFO]  = " ",
+            [vim.diagnostic.severity.WARN]  =" "
+          }
+        },
       })
 
       local on_attach_common = function(client, bufnr)
@@ -67,7 +69,7 @@
         end, vim.tbl_extend("force", { desc = "List workspace folders" }, opts or {}))
         vim.keymap.set("n", "<leader>n", function() vim.lsp.buf.rename() end, vim.tbl_extend("force", { desc = "Rename symbol" }, opts or {}))
         vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, vim.tbl_extend("force", { desc = "Code actions" }, opts or {}))
-        vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format() end, vim.tbl_extend("force", { desc = "Format code" }, opts or {}))
+        vim.keymap.set({"n","v"}, "<leader>f", function() vim.lsp.buf.format() end, vim.tbl_extend("force", { desc = "Format code" }, opts or {}))
         vim.keymap.set("n", "[d", function() vim.diagnostic.goto_prev() end, vim.tbl_extend("force", { desc = "Go to previous diagnostic" }, opts or {}))
         vim.keymap.set("n", "]d", function() vim.diagnostic.goto_next() end, vim.tbl_extend("force", { desc = "Go to next diagnostic" }, opts or {}))
         vim.keymap.set("n", "<leader>L", function()
@@ -209,14 +211,45 @@
       })
 
       nvim_lsp.clangd.setup({
-        cmd = { "${pkgs.clang-tools}/bin/clangd" },
+        cmd = {
+          "${pkgs.clang-tools}/bin/clangd",
+          "--enable-config",
+          "--pch-storage=memory",
+          "--compile-commands-dir=''${workspaceFolder}/build",
+          "--background-index",
+          "--clang-tidy",
+          "--log=verbose",
+          "--all-scopes-completion",
+          "--header-insertion=iwyu",
+          "--fallback-style=LLVM",
+          "--completion-style=detailed",
+          "--function-arg-placeholders",
+          "--pretty",
+        },
         on_attach = on_attach_common(),
+        capabilities = vim.tbl_deep_extend("force", capabilities, {
+          offsetEncoding = { "utf-16" },
+        }),
+      })
+
+      nvim_lsp.cmake.setup({
+        cmd = { "${pkgs.cmake-language-server}/bin/cmake-language-server" },
+        on_attach = on_attach_common(),
+        capabilities = capabilities,
+      })
+
+      nvim_lsp.mesonlsp.setup({
+        cmd = { "${pkgs.mesonlsp}/bin/mesonlsp", "--lsp" },
+        on_attach = function(client, bufnr)
+          on_attach_common(client, bufnr)
+          vim.cmd([[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]])
+        end,
         capabilities = capabilities,
       })
 
       -- show diagnostics when InsertLeave
       vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "go", "rust", "nix", "haskell" },
+        pattern = { "go", "rust", "nix", "haskell", "cpp", "c" },
         callback = function(args)
           vim.api.nvim_create_autocmd("DiagnosticChanged", {
             buffer = args.buf,

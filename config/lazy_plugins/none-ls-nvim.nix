@@ -1,6 +1,17 @@
-{ pkgs, helpers, ... }:
 {
-  pkg = pkgs.vimPlugins.none-ls-nvim;
+  pkgs,
+  helpers,
+  inputs,
+  ...
+}:
+let
+  none-ls-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "none-ls";
+    src = inputs.none-ls-nvim;
+  };
+in
+{
+  pkg = none-ls-nvim;
   lazy = false;
   dependencies = with pkgs.vimPlugins; [ plenary-nvim ];
   config = ''
@@ -26,6 +37,15 @@
           require("null-ls").builtins.formatting.stylua.with({
             command = "${pkgs.stylua}/bin/stylua",
             extra_args = { "--indent-type", "Spaces", "--indent-width", "2" },
+          }),
+          require("null-ls").builtins.formatting.clang_format.with({
+            command = "${pkgs.clang-tools}/bin/clang-format",
+          }),
+          require("null-ls").builtins.formatting.cmake_format.with({
+            command = "${pkgs.cmake-format}/bin/cmake-format",
+          }),
+          require("null-ls").builtins.formatting.gn_format.with({
+            command = "${pkgs.gn}/bin/gn",
           }),
         },
 

@@ -5,7 +5,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     flake-root.url = "github:srid/flake-root";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs";
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,6 +25,10 @@
     blink-cmp.url = "github:saghen/blink.cmp";
     vim-translator = {
       url = "github:voldikss/vim-translator";
+      flake = false;
+    };
+    none-ls-nvim = {
+      url = "github:nvimtools/none-ls.nvim";
       flake = false;
     };
   };
@@ -86,8 +90,11 @@
 
           _module.args.pkgs = import inputs.nixpkgs {
             inherit system;
+            config = {
+              allowBroken = true;
+            };
             overlays = [
-              inputs.neovim-nightly-overlay.overlays.default
+              # inputs.neovim-nightly-overlay.overlays.default
               # (final: prev: {
               #   neovim-unwrapped =
               #     inputs.neovim-nightly-overlay.packages.${final.stdenv.hostPlatform.system}.default;

@@ -15,6 +15,10 @@ let
       yaml
       toml
       haskell
+      c
+      cpp
+      cmake
+      meson
     ]
   );
 

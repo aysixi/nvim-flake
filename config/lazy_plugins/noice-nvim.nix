@@ -15,6 +15,7 @@
                 { find = "; before #%d+" },
                 { find = "%d fewer lines" },
                 { find = "%d more lines" },
+                { find = 'Agent service not initialized' },
               },
             },
             opts = { skip = true },

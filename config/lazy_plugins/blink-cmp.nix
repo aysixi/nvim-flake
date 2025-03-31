@@ -4,13 +4,6 @@
   helpers,
   ...
 }:
-let
-  minuet-ai = pkgs.vimUtils.buildVimPlugin {
-    name = "minuet-ai";
-    src = inputs.minuet-ai-nvim;
-    doCheck = false;
-  };
-in
 {
   pkg = inputs.blink-cmp.packages.${pkgs.system}.blink-cmp;
   lazy = true;
@@ -25,75 +18,10 @@ in
         lazy = true;
         opts = { };
       }
-      {
-        pkg = minuet-ai;
-        dependencies = with pkgs.vimPlugins; [ plenary-nvim ];
-        config = ''
-          function()
-            -- you can use deepseek with both openai_fim_compatible or openai_compatible provider
-            require("minuet").setup({
-              provider = "openai_fim_compatible",
-              provider_options = {
-                openai_fim_compatible = {
-                  api_key = 'OPENAI_API_KEY',
-                  name = "deepseek",
-                  optional = {
-                    max_tokens = 4096,
-                    top_p = 0.9,
-                  },
-                },
-                openai_compatible = {
-                  api_key = 'OPENAI_API_KEY',
-                  end_point = "https://api.deepseek.com/v1/chat/completions",
-                  name = "deepseek",
-                  optional = {
-                    max_tokens = 4096,
-                    top_p = 0.9,
-                  },
-                },
-              },
-            })
-          end
-        '';
-      }
     ]
     ++ [
       # nvim-cmp source
       blink-compat
-      {
-        pkg = pkgs.vimPlugins.copilot-cmp;
-        dependencies = with pkgs.vimPlugins; [
-          {
-            pkg = pkgs.vimPlugins.copilot-lua;
-            cmd = "Copilot";
-            event = "InsertEnter";
-            config = ''
-              function()
-                require("copilot").setup({
-                  suggestion = {
-                    enabled = true,
-                    auto_trigger = true,
-                    keymap = {
-                      accept = "<C-cr>",
-                    },
-                  },
-                  panel = { enabled = false },
-                  copilot_node_command = "${pkgs.nodejs-18_x}/bin/node",
-                  filetypes = { ["*"] = true, },
-                })
-              end
-            '';
-          }
-        ];
-        config = ''
-          function()
-            require("copilot_cmp").setup({
-              event = { "InsertEnter", "LspAttach" },
-              fix_pairs = true,
-            })
-          end
-        '';
-      }
       cmp-calc
     ];
   config = ''
@@ -287,26 +215,10 @@ in
           preset = 'default', -- | default | luasnip |
         },
         sources = {
-          default = { "lsp", "path", "snippets", "cmdline", "buffer", "copilot", "calc", "dadbod", "minuet" },
+          default = { "lsp", "path", "snippets", "cmdline", "buffer", "calc", "dadbod" },
           providers = {
             lsp = { score_offset = 5, },
             snippets = { score_offset = 4, },
-            minuet = {
-              name = 'minuet',
-              module = 'minuet.blink',
-              async = true,
-              score_offset = 101, -- Gives minuet higher priority among suggestions
-              transform_items = function(_, items)
-                local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
-                local kind_idx = #CompletionItemKind + 1
-                CompletionItemKind[kind_idx] = "Minuet"
-                for _, item in ipairs(items) do
-                  item.kind = kind_idx
-                  item.source_name = "Minuet"
-                end
-                return items
-              end,
-            },
             cmdline = {
               enabled = function()
                 return vim.fn.mode() == "c"
@@ -321,23 +233,6 @@ in
                 for _, item in ipairs(items) do
                   item.kind = kind_idx
                   item.source_name = "Cmdline"
-                end
-                return items
-              end,
-            },
-            copilot = {
-              enabled = true,
-              name = "copilot", -- same as source_name in nvim-cmp
-              module = "blink.compat.source",
-              score_offset = 100,
-              async = true,
-              transform_items = function(_, items)
-                local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
-                local kind_idx = #CompletionItemKind + 1
-                CompletionItemKind[kind_idx] = "Copilot"
-                for _, item in ipairs(items) do
-                  item.kind = kind_idx
-                  item.source_name = "Copilot"
                 end
                 return items
               end,
@@ -395,9 +290,7 @@ in
             Operator = "",
             TypeParameter = "",
             Cmdline = "",
-            Copilot = "",
             Calc = "",
-            Minuet = "󱗻",
           },
         },
         fuzzy = {

@@ -40,8 +40,8 @@ let
       "rainbow-delimiters-nvim"
     ];
     completion = [
-      # "blink-cmp"
-      "nvim-cmp"
+      "blink-cmp"
+      # "nvim-cmp"
     ];
     lsp = [
       "nvim-lspconfig"

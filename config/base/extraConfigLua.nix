@@ -7,11 +7,17 @@
 
     local util = require("lspconfig.util")
     local function load_project_nvim_config()
-      local root_dir = function(fname)
+      local function find_project_root(fname)
+        local repo = vim.fs.find(".repo", { path = fname, upward = true })[1]
+        if repo then
+          return vim.fs.dirname(repo)
+        end
         return util.find_git_ancestor(fname)
       end
+
       local current_file = vim.fn.expand("%:p")
-      local project_root = root_dir(current_file)
+      local project_root = find_project_root(current_file)
+
       if project_root then
         local nvim_config_path = project_root .. "/.nvim.lua"
         if vim.loop.fs_stat(nvim_config_path) then

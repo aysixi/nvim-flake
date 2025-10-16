@@ -31,6 +31,14 @@
       url = "github:nvimtools/none-ls.nvim";
       flake = false;
     };
+    nui-nvim = {
+      url = "github:MunifTanjim/nui.nvim";
+      flake = false;
+    };
+    copilot-cmp-nvim = {
+      url = "github:zbirenbaum/copilot-cmp";
+      flake = false;
+    };
   };
 
   outputs =
@@ -85,7 +93,7 @@
                 indent_width = 2;
               };
             };
-            programs.nixfmt-rfc-style.enable = true;
+            programs.nixfmt.enable = true;
           };
 
           _module.args.pkgs = import inputs.nixpkgs {
@@ -94,7 +102,7 @@
               allowBroken = true;
             };
             overlays = [
-              # inputs.neovim-nightly-overlay.overlays.default
+              inputs.neovim-nightly-overlay.overlays.default
               # (final: prev: {
               #   neovim-unwrapped =
               #     inputs.neovim-nightly-overlay.packages.${final.stdenv.hostPlatform.system}.default;

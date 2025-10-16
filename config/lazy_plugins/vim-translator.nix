@@ -13,7 +13,6 @@ let
         autoload/translator.vim
     '';
   };
-
 in
 {
   pkg = vim-translator;

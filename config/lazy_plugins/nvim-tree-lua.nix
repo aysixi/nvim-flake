@@ -31,6 +31,21 @@
           side = "left",
         },
       })
+      -- with telescope
+      vim.keymap.set("n", "<leader>g", function()
+        local api = require("nvim-tree.api")
+        local node = api.tree.get_node_under_cursor()
+        local path = node and node.absolute_path or vim.loop.cwd()
+
+        local stat = vim.loop.fs_stat(path)
+        if stat and stat.type == "file" then
+          path = vim.fn.fnamemodify(path, ":h")
+        end
+
+        require("telescope.builtin").live_grep({
+          search_dirs = { path },
+        })
+      end, { desc = "Live grep under current folder from nvim-tree" })
     end
   '';
 }

@@ -1,7 +1,13 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
+let
+  nui-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "nui-nvim";
+    src = inputs.nui-nvim;
+  };
+in
 {
   pkg = pkgs.vimPlugins.noice-nvim;
-  dependencies = with pkgs.vimPlugins; [ nui-nvim ];
+  dependencies = [ nui-nvim ];
   config = ''
     function()
       require("noice").setup({

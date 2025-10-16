@@ -5,9 +5,14 @@
   dependencies = with pkgs.vimPlugins; [ nvim-web-devicons ];
   config = ''
     function()
-       require("bufferline").setup {
-         highlights = require("catppuccin.groups.integrations.bufferline").get_theme()
-       }
-     end
+      local highlights
+      highlights = require("nord").bufferline.highlights({
+        italic = true,
+        bold = true,
+      })
+      require("bufferline").setup({
+        highlights = highlights,
+      })
+    end
   '';
 }

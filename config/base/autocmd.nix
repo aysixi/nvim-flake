@@ -23,7 +23,12 @@
       callback = helpers.mkRaw ''
         function()
           local util = require("lspconfig.util")
-          local root_dir = util.find_git_ancestor(vim.fn.expand("%:p"))
+          local path = vim.fn.expand("%:p")
+          local function find_repo_root(startpath)
+            local repo = vim.fs.find('.repo', { path = startpath, upward = true })[1]
+            return repo and vim.fs.dirname(repo) or nil
+          end
+          local root_dir = find_repo_root(path) or util.find_git_ancestor(path)
           if root_dir then
             pcall(function() vim.cmd('cd ' .. root_dir) end)
           else

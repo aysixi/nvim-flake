@@ -4,13 +4,13 @@ on:
   schedule:
     - cron: "0 0 * * 6"
 env:
-  CACHIX_CACHE_NAME: gomibox
+  CACHIX_CACHE_NAME: ruixi-rebirth
 jobs:
   push_to_cachix:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Install nix
         uses: cachix/install-nix-action@v31
         with:

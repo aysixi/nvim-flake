@@ -12,8 +12,7 @@ nvim_lsp.config.nixd = {
       },
       options = {
         flake_parts = {
-          expr =
-          'let flake = builtins.getFlake ("git+file://" + toString ./.); in flake.debug.options // flake.currentSystem.options',
+          expr = 'let flake = builtins.getFlake ("git+file://" + toString ./.); in flake.debug.options // flake.currentSystem.options',
         },
         nixvim = {
           expr = '(builtins.getFlake ("git+file://" + toString ./.)).packages.${builtins.currentSystem}.default.options',

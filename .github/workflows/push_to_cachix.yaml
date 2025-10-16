@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "0 0 * * 6"
 env:
-  CACHIX_CACHE_NAME: ruixi-rebirth
+  CACHIX_CACHE_NAME: gomibox
 jobs:
   push_to_cachix:
     runs-on: ubuntu-latest

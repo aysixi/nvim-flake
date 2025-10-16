@@ -47,7 +47,7 @@ in
   lazy = true;
   event = "BufRead";
   dependencies = with pkgs.vimPlugins; [
-    nvim-treesitter-context
+    # nvim-treesitter-context
     nvim-treesitter-textobjects
   ];
 }

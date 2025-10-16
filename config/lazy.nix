@@ -8,8 +8,9 @@ let
   importPlugin = name: import ./lazy_plugins/${name}.nix { inherit pkgs helpers inputs; };
   category = {
     theme = [
-      "nord-nvim"
+      # "nord-nvim"
       # "nordic-nvim"
+      "catppuccin-nvim"
     ];
     filetree = "nvim-tree-lua";
     terminal = "toggleterm-nvim";

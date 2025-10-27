@@ -1,0 +1,4 @@
+/config/lazy_plugins/lspsaga-nvim.nix --theme
+/config/lazy_plugins/bufferline-nvim.nix --theme
+/config/lazy_plugins/nvim-treesitter.nix --ui #nvim-treesitter-context
+
